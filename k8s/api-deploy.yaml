@@ -21,7 +21,7 @@ spec:
       # - Each init container must complete successfully before the next one starts.
       containers:
         - name: bookapi
-          image: ai200labacr.azurecr.io/bookapi:v7
+          image: ai200labacr.azurecr.io/bookapi:latest
           resources:
             requests:
               cpu: 100m
@@ -38,14 +38,23 @@ spec:
           env:
           - name: ASPNETCORE_URLS
             value: "http://+:8080"
+          # - name: Database__Server
+          #   value: "vm-az204-dev-eu2.eastus2.cloudapp.azure.com"
+          # - name: Database__User
+          #   value: "postgres"
+          # - name: Database__Password
+          #   value: "example"
+          # - name: Database__Database
+          #   value: "postgres"
+
           - name: Database__Server
-            value: "vm-az204-dev-eu2.eastus2.cloudapp.azure.com"
+            value: "postgres"
           - name: Database__User
-            value: "postgres"
+            value: "bookuser"
           - name: Database__Password
-            value: "example"
+            value: "qXzKkBTPDu7j78X"
           - name: Database__Database
-            value: "postgres"
+            value: "booksdb"            
 
           ports:
             - containerPort: 8080

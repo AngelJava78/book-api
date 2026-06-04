@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  postgres
+  namespace: default
+  labels:
+    app:  postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  postgres
+    spec:
+      containers:
+      - name:  postgres
+        image:  ai200labacr.azurecr.io/postgres:18
+        ports:
+        - containerPort:  5432
+          name: postgres
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "qXzKkBTPDu7j78X"
+        - name: POSTGRES_USER
+          value: "bookuser"
+        - name: POSTGRES_DB
+          value: "booksdb"
+        readinessProbe:
+          exec:
+            command: ["pg_isready", "-h", "localhost", "-p", "5432", "-U", "bookuser"]
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+          periodSeconds: 10
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+      restartPolicy: Always
