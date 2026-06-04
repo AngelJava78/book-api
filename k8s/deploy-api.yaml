@@ -21,7 +21,7 @@ spec:
       # - Each init container must complete successfully before the next one starts.
       containers:
         - name: bookapi
-          image: ai200labacr.azurecr.io/bookapi:v3
+          image: ai200labacr.azurecr.io/bookapi:v7
           resources:
             requests:
               cpu: 100m
