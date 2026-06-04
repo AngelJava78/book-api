@@ -47,14 +47,34 @@ spec:
           # - name: Database__Database
           #   value: "postgres"
 
+          # - name: Database__Server
+          #   value: "postgres"
+          # - name: Database__User
+          #   value: "bookuser"
+          # - name: Database__Password
+          #   value: "qXzKkBTPDu7j78X"
+          # - name: Database__Database
+          #   value: "booksdb"
           - name: Database__Server
-            value: "postgres"
+            valueFrom:
+              configMapKeyRef:
+                name: bookapi-config
+                key: POSTGRES_HOST
           - name: Database__User
-            value: "bookuser"
-          - name: Database__Password
-            value: "qXzKkBTPDu7j78X"
+            valueFrom:
+              configMapKeyRef:
+                name: bookapi-config
+                key: POSTGRES_USER
           - name: Database__Database
-            value: "booksdb"            
+            valueFrom:
+              configMapKeyRef:
+                name: bookapi-config
+                key: POSTGRES_DB
+          - name: Database__Password
+            valueFrom:
+              secretKeyRef:
+                name: bookapi-secret
+                key: POSTGRES_PASSWORD
 
           ports:
             - containerPort: 8080

@@ -31,10 +31,20 @@ spec:
         env:
         - name: POSTGRES_PASSWORD
           value: "qXzKkBTPDu7j78X"
+        # - name: POSTGRES_USER
+        #   value: "bookuser"
+        # - name: POSTGRES_DB
+        #   value: "booksdb"
         - name: POSTGRES_USER
-          value: "bookuser"
+          valueFrom:
+            configMapKeyRef:
+              name: bookapi-config
+              key: POSTGRES_USER
         - name: POSTGRES_DB
-          value: "booksdb"
+          valueFrom:
+            configMapKeyRef:
+              name: bookapi-config
+              key: POSTGRES_DB              
         readinessProbe:
           exec:
             command: ["pg_isready", "-h", "localhost", "-p", "5432", "-U", "bookuser"]
@@ -52,8 +62,13 @@ spec:
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql
+        - name: postgres-initdb
+          mountPath: /docker-entrypoint-initdb.d          
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: postgres-pvc
+        - name: postgres-initdb
+          configMap:
+            name: postgres-initdb
       restartPolicy: Always
