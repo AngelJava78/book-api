@@ -7,6 +7,7 @@ az aks create \
   --location $LOCATION \
   --node-count 1 \
   --node-vm-size "$VM_SIZE" \
+  --nodepool-name agentpool \
   --vm-set-type VirtualMachineScaleSets \
   --load-balancer-sku standard \
   --enable-managed-identity \
