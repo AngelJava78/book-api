@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookapi
+  namespace: default
+  labels:
+    app: bookapi
+spec:
+  selector:
+    matchLabels:
+      app: bookapi
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bookapi
+    spec:
+      # initContainers:
+      # Init containers are exactly like regular containers, except:
+      # - Init containers always run to completion.
+      # - Each init container must complete successfully before the next one starts.
+      containers:
+        - name: bookapi
+          image: ai200labacr.azurecr.io/bookapi:v3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          # env:
+          #   - name: DB_HOST
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         name: bookapi
+          #         key: DB_HOST
+          env:
+          - name: ASPNETCORE_URLS
+            value: "http://+:8080"
+          - name: Database__Server
+            value: "vm-az204-dev-eu2.eastus2.cloudapp.azure.com"
+          - name: Database__User
+            value: "postgres"
+          - name: Database__Password
+            value: "example"
+          - name: Database__Database
+            value: "postgres"
+
+          ports:
+            - containerPort: 8080
+              name: bookapi
+
