@@ -11,10 +11,10 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["BookApi/BookApi.csproj", "BookApi/"]
-RUN dotnet restore "./BookApi/BookApi.csproj"
+COPY ["BookApi.csproj", "./"]
+RUN dotnet restore "./BookApi.csproj"
 COPY . .
-WORKDIR "/src/BookApi"
+WORKDIR "/src"
 RUN dotnet build "./BookApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Esta fase se usa para publicar el proyecto de servicio que se copiará en la fase final.
